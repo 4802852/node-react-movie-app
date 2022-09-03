@@ -1,24 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { API_URL, IMAGE_BASE_URL } from "../../Config";
 import { API_KEY } from "../../dev";
-import MainImage from "./Sections/MainImage";
+import MainImage from "../commons/MainImage";
 import GridCards from "../commons/GridCards";
 import { Row } from "antd";
 
 function LandingPage() {
   const [Movies, setMovies] = useState([]);
   const [MainMovieImage, setMainMovieImage] = useState(null);
+  const [CurrentPage, setCurrentPage] = useState(0);
 
-  useEffect(() => {
-    const endpoint = `${API_URL}popular?api_key=${API_KEY}&language=en-US&page=1`;
+  const fetchMovies = (endpoint) => {
     fetch(endpoint)
       .then((response) => response.json())
       .then((response) => {
         // console.log(response);
-        setMovies(response.results);
-        setMainMovieImage(response.results[0]);
+        setMovies([...Movies, ...response.results]);
+        setCurrentPage(response.page);
+        if (response.page === 1) setMainMovieImage(response.results[0]);
       });
+  };
+
+  useEffect(() => {
+    const endpoint = `${API_URL}popular?api_key=${API_KEY}&language=en-US&page=1`;
+    fetchMovies(endpoint);
+    // eslint-disable-next-line
   }, []);
+
+  const loadMoreItems = () => {
+    const endpoint = `${API_URL}popular?api_key=${API_KEY}&language=en-US&page=${CurrentPage + 1}`;
+    fetchMovies(endpoint);
+  };
 
   return (
     <div style={{ width: "100%", margin: "0" }}>
@@ -39,7 +51,7 @@ function LandingPage() {
       </div>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <button>Load More</button>
+        <button onClick={loadMoreItems}>Load More</button>
       </div>
     </div>
   );
