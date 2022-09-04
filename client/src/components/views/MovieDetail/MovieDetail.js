@@ -5,6 +5,7 @@ import { API_KEY } from "../../dev";
 import MainImage from "../commons/MainImage";
 import GridCards from "../commons/GridCards";
 import MovieInfo from "./Sections/MovieInfo";
+import Favorite from "./Sections/Favorite";
 import { Row } from "antd";
 
 function MovieDetail(props) {
@@ -20,13 +21,13 @@ function MovieDetail(props) {
     fetch(endpointInfo)
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         setMovie(response);
       });
     fetch(endpointCrew)
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         setCasts(response.cast);
       });
     // eslint-disable-next-line
@@ -42,6 +43,9 @@ function MovieDetail(props) {
       {Movie && <MainImage image={`${IMAGE_BASE_URL}w1280${Movie.backdrop_path}`} title={Movie.original_title} text={Movie.overview} />}
       {/* Body */}
       <div style={{ width: "85%", margin: "1rem auto" }}>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Favorite movieInfo={Movie} movieId={movieId} userFrom={localStorage.getItem("userId")} />
+        </div>
         {/* Movie Info */}
         {Movie && <MovieInfo movie={Movie} />}
         <br />
