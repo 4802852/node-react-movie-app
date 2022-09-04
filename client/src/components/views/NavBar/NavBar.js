@@ -1,22 +1,13 @@
 import React from "react";
-import axios from "axios";
-import { useNavigate } from "react-redux";
+import LeftMenu from "./Sections/LeftMenu";
+// import RightMenu from "./Sections/RightMenu";
 
 function NavBar() {
-  const navigate = useNavigate();
-
-  const onLogoutHandler = () => {
-    axios.get("/api/users/logout").then((response) => {
-      if (response.data.success) {
-        navigate("/login");
-      } else {
-        alert("로그아웃에 실패했습니다.");
-      }
-    });
-  };
   return (
-    <div>
-      NavBar<button onClick={onLogoutHandler}>로그아웃</button>
+    <div style={{ position: "fixed", width: "100%", zIndex: 1, display: "flex" }}>
+      <div style={{ width: "100%" }}>
+        <LeftMenu />
+      </div>
     </div>
   );
 }
